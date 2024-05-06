@@ -76,6 +76,7 @@ function printDetails(id) {
         <div class="top">
           <input type="number" min="1" value="1" onclick="changePrice(event)"/>
           <button type="button" class="cart-btn" onclick="saveProduct(${product.id})">
+          <a href="./cart.html?id=${product.id}">
             Añadir al Carrito
           </button>
         </div>
