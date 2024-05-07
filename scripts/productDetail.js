@@ -76,7 +76,6 @@ function printDetails(id) {
         <div class="top">
           <input type="number" min="1" value="1" onclick="changePrice(event)"/>
           <button type="button" class="cart-btn" onclick="saveProduct(${product.id})">
-          <a href="./cart.html?id=${product.id}">
             Añadir al Carrito
           </button>
         </div>
@@ -155,10 +154,11 @@ function saveProduct(id) {
     id: found.id,
     title: found.title,
     //Obtener el valor del precio calculado y escrito en el h2 (se registra sin el $ por slice)
-    price: document.querySelector("#price").innerHTML.slice(1),
+    //price: document.querySelector("#price").innerHTML.slice(1),
+    price: found.price-(found.price*(found.discount*1/100)),
     //Obtiene el color que selecciona y lo mismo con la cantidad
     color: document.querySelector("#color").value,
-    photo: found.image[0],
+    image: found.image[0],
     quantity: document.querySelector("input").value
   };
   //let cart = [];

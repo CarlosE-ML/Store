@@ -137,10 +137,6 @@
 .cart-btn:hover {
   background: #ff5151;
 }
-.cart-btn a {
-  color: white;
-  text-decoration: none;
-}
 
 /* SALES */
 .sales-block {
