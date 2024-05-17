@@ -7,7 +7,7 @@ console.log(cartproducts);
 //Definir funcion printCart
 function printCart() {
     //Traer el selector del contenedor de productos
-    const container = document.querySelector(".container");
+    const container = document.querySelector(".cart-section");
     //Limpiar el contenedor
     container.innerHTML = "";
     //Consulta si no hay productos en el localstorage
@@ -35,9 +35,10 @@ function printCart() {
       <input class="product-input" type="number" name="quantity" min="1" id="${product.id}_${product.color}" value="${product.quantity}" onchange="changeQuantity(event)">
     </div>
     <div class="product-price">
-        P.U. $ ${product.price}.00 <br>
+        Precio U. $ ${product.price}.00 <br>
+        Descuento U. $ ${product.discount}.00 <br>
         --------------- <br>
-     Subtotal $ ${product.price * product.quantity}.00
+     Subtotal $ ${(product.price-(product.price*(product.discount*1/100)))*product.quantity}.00
     </div>
     `;
             //Agregar el div al contenedor
@@ -59,7 +60,7 @@ function printTotal() {
         //Iterar sobre los productos del carrito
         cartproducts.forEach(product => {
             //Sumar el precio de cada producto al total
-            totalPrice = totalPrice + (product.price * product.quantity);
+            totalPrice = totalPrice + ((product.price-(product.price*(product.discount*1/100)))*product.quantity);
         });
     }
 
@@ -82,6 +83,25 @@ function printTotal() {
         //Redirigir a la página de inicio
         window.location.href = "./cart.html";
     });
+}
+
+function changeQuantity(event){
+    //Traer el id del producto
+    const id = event.target.id.split("_");
+    //Traer el valor de la cantidad
+    const quantity = event.target.value;
+    //Iterar sobre los productos del carrito
+    cartproducts.forEach(product => {
+        //Verificar si el id del producto es igual al id del producto seleccionado
+        if (product.id == id[0] && product.color == id[1]) {
+            //Cambiar la cantidad del producto
+            product.quantity = quantity;
+        }
+    });
+    //Guardar el carrito en localStorage
+    localStorage.setItem('cart', JSON.stringify(cartproducts));
+    printCart();
+    printTotal();
 }
 
 printCart();
