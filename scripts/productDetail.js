@@ -165,7 +165,8 @@ function saveProduct(id) {
     //Obtiene la imagen inicial
     image: found.image[0],
     //Obtiene la cantidad que selecciona en la pagina detalle producto
-    quantity: parseInt(document.querySelector("input").value)
+    quantity: parseInt(document.querySelector("input").value),
+    tax: found.tax
   };
     // Verificar si la clave 'cart' existe en localStorage
   if (localStorage.getItem('cart')) {
@@ -174,17 +175,25 @@ function saveProduct(id) {
     // Buscar si el producto exite en el localstorage
     let existeProducto = cart.find(item => item.id === found.id);
     if(existeProducto){
-      console.log(existeProducto);
-      console.log(existeProducto.quantity);
-      console.log(existeProducto.price);
-      console.log(objectProduct);
-      console.log(objectProduct.quantity);
-      console.log(objectProduct.price);
       //existeProducto.price = (existeProducto.price*existeProducto.quantity) + objectProduct.price;
-      // Sumar la cantidad que se registro con la cantidad que se esta agregando
-      existeProducto.quantity += objectProduct.quantity;
-      localStorage.setItem("cart", JSON.stringify(cart));
-      Swal.fire('¡Producto añadido!', 'Ya hay un producto similar en el carrito', 'success');
+      Swal.fire({
+        title: '¿Estás seguro de añadir?',
+        text: "Ya hay un producto similar en el carrito, la cantidad se sumara. ¿Deseas continuar?",
+        icon: 'warning',
+        //Por defecto el confirmbutton esta habilitado
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, agregalo'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Sumar la cantidad que se registro con la cantidad que se esta agregando
+          existeProducto.quantity = parseInt(existeProducto.quantity) + objectProduct.quantity;
+          localStorage.setItem("cart", JSON.stringify(cart));
+          Swal.fire({ title: "¡Producto añadido!" });
+        }
+        });
+      //Swal.fire('¡Producto añadido!', 'Ya hay un producto similar en el carrito', 'success');
     }
     else{
       // Agregar el nuevo producto al array
@@ -205,5 +214,10 @@ function saveProduct(id) {
   // Imprimir el storage para verificar que funciona
   console.log(cartData);
 }
+
+// function alertaPersonalizada(){
+//   "Crear la alerta para los 3"
+// }
+
 
 printDetails(id);
