@@ -1,3 +1,4 @@
+//Array con los productos que estan en el carrito
 let cartproducts = JSON.parse(localStorage.getItem("cart"));
 console.log(cartproducts);
 
@@ -30,12 +31,10 @@ function printCart() {
     <div class="product-details">
       <div class="title-product">${product.title}</div>
       <div class="color-product">${product.color}</div>
-      <!--Mostrar la cantidad a comprar-->
-      <input class="product-input" type="number" name="quantity" min="1" id="${
-        product.id
-      }_${product.color}" value="${
-        product.quantity
-      }" onchange="changeQuantity(event)">
+      <!--Mostrar la cantidad a comprar y establecer una variable ID con el id y color-->
+      <input class="product-input" type="number" name="quantity" min="1" 
+      id="${product.id}_${product.color}" value="${product.quantity}" 
+      onchange="changeQuantity(event)">
     </div>
     <div class="product-price">
         Precio U. $ ${product.price}.00 <br>
@@ -93,16 +92,30 @@ function printTotal() {
 }
 
 function changeQuantity(event) {
-  //Traer el id del producto
+  //Traer el id del producto (id_color) y separarlo por el _
   const id = event.target.id.split("_");
   //Traer el valor de la cantidad
   const quantity = event.target.value;
   //Iterar sobre los productos del carrito
   cartproducts.forEach((product) => {
     //Verificar si el id del producto es igual al id del producto seleccionado
+    //Validamos el id y el color
     if (product.id == id[0] && product.color == id[1]) {
       //Cambiar la cantidad del producto
       product.quantity = quantity;
+      //Variable con el subtotal para mostrar al cambiar
+      let subtotal = (product.price - product.price * ((product.discount * 1) / 100)) *
+      product.quantity;
+      //Mensaje de alerta de cambio de cantidad y subtotal establecido
+      Swal.fire({
+        position: 'top-end',
+        icon: 'info',
+        title: 'Cantidad actualizada',
+        text: `El subtotal del producto es $${subtotal}.00`,
+        showConfirmButton: false,
+        //Cerrarse luego de 3 milisegundos
+        timer: 3000
+        });
     }
   });
   //Guardar el carrito en localStorage
