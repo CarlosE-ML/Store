@@ -90,8 +90,9 @@ function printDetails(id) {
 
 // filtre el array con todos los productos con los productos cuyo nombre incluya el texto capturado
 let offerProducts = products.filter(product => product.onsale == true);
-
-// Crea una funcion para que retorne las tarjetas de producto que estaban en HTML en oferta
+/**
+ * Crea una funcion para que retorne las tarjetas de producto que estaban en HTML en oferta
+ */
 function createCard(product) {
   return `
     <a href="./details.html?id=${product.id}" class="product-card">
@@ -136,7 +137,7 @@ function changePrice(event){
   //traer la cantidad del input de tipo number
   const quantity = event.target.value;
   //traer el producto
-  const product = products.find(product => product.id == id);
+  const product = products.find(each => each.id == id);
   //traer el selector del precio
   const priceSelector = document.querySelector("#price");
   //cambiar el precio total
@@ -154,30 +155,69 @@ function saveProduct(id) {
     id: found.id,
     title: found.title,
     //Obtener el valor del precio calculado y escrito en el h2 (se registra sin el $ por slice)
-    price: document.querySelector("#price").innerHTML.slice(1),
-    //Obtiene el color que selecciona y lo mismo con la cantidad
+    //price: document.querySelector("#price").innerHTML.slice(1),
+    //Obtiene el precio unitario con el descuento
+    //price: found.price-(found.price*(found.discount*1/100)),
+    price: found.price,
+    discount: parseInt(found.discount),
+    //Obtiene el color que selecciona en la pagina detalle producto
     color: document.querySelector("#color").value,
-    photo: found.image[0],
-    quantity: document.querySelector("input").value
+    //Obtiene la imagen inicial
+    image: found.image[0],
+    //Obtiene la cantidad que selecciona en la pagina detalle producto
+    quantity: parseInt(document.querySelector("input").value),
+    tax: found.tax
   };
-  //let cart = [];
-  // Verificar si la clave 'cart' existe en localStorage
+    // Verificar si la clave 'cart' existe en localStorage
   if (localStorage.getItem('cart')) {
     // Si existe, obtener el contenido y convertirlo de nuevo en un array
     let cart = JSON.parse(localStorage.getItem('cart'));
-    // Agregar el nuevo producto al array
-    cart.push(objectProduct);
-    // Guardar el array actualizado en el storage
-    localStorage.setItem("cart", JSON.stringify(cart));
+    // Buscar si el producto exite en el localstorage
+    let existeProducto = cart.find(item => item.id === found.id);
+    if(existeProducto){
+      //existeProducto.price = (existeProducto.price*existeProducto.quantity) + objectProduct.price;
+      Swal.fire({
+        title: '¿Estás seguro de añadir?',
+        text: "Ya hay un producto similar en el carrito, la cantidad se sumara. ¿Deseas continuar?",
+        icon: 'warning',
+        //Por defecto el confirmbutton esta habilitado
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, agregalo'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Sumar la cantidad que se registro con la cantidad que se esta agregando
+          existeProducto.quantity = parseInt(existeProducto.quantity) + objectProduct.quantity;
+          localStorage.setItem("cart", JSON.stringify(cart));
+          Swal.fire({ title: "¡Producto añadido!" });
+        }
+        });
+      //Swal.fire('¡Producto añadido!', 'Ya hay un producto similar en el carrito', 'success');
+    }
+    else{
+      // Agregar el nuevo producto al array
+      cart.push(objectProduct);
+      // Guardar el array actualizado en el storage
+      localStorage.setItem("cart", JSON.stringify(cart));
+      Swal.fire('¡Producto añadido!', 'Se agrego un nuevo producto al carrito', 'success');
+    }
+
   } else {
     // Si no existe, crear un nuevo array con el producto y guardarlo en el storage
     let cart = [objectProduct];
     localStorage.setItem("cart", JSON.stringify(cart));
+    Swal.fire('¡Producto añadido!', 'Se agrego el producto al carrito', 'success');
   }
   // Obtener los datos almacenados en localStorage para la clave "cart"
   var cartData = localStorage.getItem("cart");
   // Imprimir el storage para verificar que funciona
   console.log(cartData);
 }
+
+// function alertaPersonalizada(){
+//   "Crear la alerta para los 3"
+// }
+
 
 printDetails(id);
