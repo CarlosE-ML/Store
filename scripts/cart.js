@@ -8,13 +8,13 @@ console.log(cartproducts);
 //Definir funcion printCart
 function printCart() {
   //Traer el selector del contenedor de productos
-  const container = document.querySelector(".cart-section");
+  const container = document.querySelector("#productscart");
   //Limpiar el contenedor
   container.innerHTML = "";
   //Consulta si no hay productos en el localstorage
   if (cartproducts === null || cartproducts.length === 0) {
     container.innerHTML = `
-        <article id="cartproducts" class="product-cart">
+        <article class="product-cart">
             <div class="title-product">No hay productos en el carrito</div>
         </article>
             `;
@@ -29,7 +29,7 @@ function printCart() {
       productDiv.innerHTML = `
     <img class="product-img" src="${product.image}">
     <div class="product-details">
-      <div class="title-product">${product.title}</div>
+      <strong class="title-product">${product.title}</strong>
       <div class="color-product">${product.color}</div>
       <!--Mostrar la cantidad a comprar y establecer una variable ID con el id y color-->
       <input class="product-input" type="number" name="quantity" min="1" 
@@ -37,13 +37,13 @@ function printCart() {
       onchange="changeQuantity(event)">
     </div>
     <div class="product-price">
-        Precio U. $ ${product.price}.00 <br>
-        Descuento ${product.discount}% <br>
-        --------------- <br>
-     Subtotal $ ${
+      <span>Precio U. $ ${product.price}.00 <br></span>
+      <span class="discount-product"><strong >Descuento ${product.discount}% <br></strong></span>
+      --------------- <br>
+        <strong>Subtotal $ ${
        (product.price - product.price * ((product.discount * 1) / 100)) *
        product.quantity
-     }.00
+     }.00</strong>
     </div>
     `;
       //Agregar el div al contenedor
@@ -79,12 +79,19 @@ function printTotal() {
   totalContainer.innerHTML = "";
   //Agregar el html
   totalContainer.innerHTML = `
-    <h1 class="cart-title">Resumen del pedido</h1>
-        <p class="cart-total">Total USD $${
-          totalPrice !== null || totalPrice != 0 ? totalPrice : 0
-        }</p>
-        <p class="cart-tax">${desTax}</p>
-        <button class="cart-btn" id="buy" type="button" onclick="checkout()">COMPRAR</button>
+    <div class="cart-resume">
+      <div class="cart-data">
+      <h2 class="cart-title"><span>Resumen</span><span>del</span><span>pedido</span></h2>
+        <div class="cart-total">
+          <h3>Total</h3>
+          <strong class="cart-price">USD $
+          ${totalPrice !== null || totalPrice != 0 ? totalPrice : 0}
+          </strong>
+        </div>
+        <small class="cart-tax">${desTax}</small>
+      </div>
+      <button class="cart-btn" id="buy" type="button" onclick="checkout()">COMPRAR</button>
+    </div>
     `;
   //Tambien funciona colocando el EventListener
   //const buySelector = document.getElementById("buy");
@@ -104,18 +111,19 @@ function changeQuantity(event) {
       //Cambiar la cantidad del producto
       product.quantity = quantity;
       //Variable con el subtotal para mostrar al cambiar
-      let subtotal = (product.price - product.price * ((product.discount * 1) / 100)) *
-      product.quantity;
+      let subtotal =
+        (product.price - product.price * ((product.discount * 1) / 100)) *
+        product.quantity;
       //Mensaje de alerta de cambio de cantidad y subtotal establecido
       Swal.fire({
-        position: 'top-end',
-        icon: 'info',
-        title: 'Cantidad actualizada',
+        position: "top-end",
+        icon: "info",
+        title: "Cantidad actualizada",
         text: `El subtotal del producto es $${subtotal}.00`,
         showConfirmButton: false,
         //Cerrarse luego de 3 milisegundos
-        timer: 3000
-        });
+        timer: 3000,
+      });
     }
   });
   //Guardar el carrito en localStorage

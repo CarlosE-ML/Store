@@ -34,6 +34,8 @@
 .product-price {
   width: 100%;
   text-align: right;
+  display: flex;
+  flex-direction: column;
 }
 .product-description {
   white-space: nowrap;
@@ -46,6 +48,9 @@
   border-radius: 10px;
   border: 1px #eaeaea solid;
   padding: 5px;
+}
+.discount-product{
+  color: #428f13;
 }
 
 /* RESUME */
