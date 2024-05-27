@@ -27,15 +27,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 2px;
+  /*gap: 2px;
   width: 340px;
+  Se colocan tamaños fijos para que funione
+  el spacebetween de product-cart*/
+  width: 250px;
   height: 100px;
 }
 .product-price {
-  width: 100%;
+  width: 200px;
   text-align: right;
+  /*width: 100%;*/
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100px;
 }
 .product-description {
   white-space: nowrap;

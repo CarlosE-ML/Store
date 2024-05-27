@@ -15,7 +15,7 @@ function printCart() {
   if (cartproducts === null || cartproducts.length === 0) {
     container.innerHTML = `
         <article class="product-cart">
-            <div class="title-product">No hay productos en el carrito</div>
+            <strong style='width: 100%; text-align: center'>No hay productos en el carrito</strong>
         </article>
             `;
   } else {
@@ -39,7 +39,7 @@ function printCart() {
     <div class="product-price">
       <span>Precio U. $ ${product.price}.00 <br></span>
       <span class="discount-product"><strong >Descuento ${product.discount}% <br></strong></span>
-      --------------- <br>
+      ---------------- <br>
         <strong>Subtotal $ ${
        (product.price - product.price * ((product.discount * 1) / 100)) *
        product.quantity
